@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(0);
+
 require 'vendor/autoload.php';
 require 'simple_html_dom.php';
 
@@ -65,19 +67,25 @@ if ($links) {
                 ->setCellValue('F' . $i, $f->nodeValue)
                 ->setCellValue('G' . $i, $g->nodeValue);
 
+            ob_end_flush();
+            ob_implicit_flush();
+            echo $i . "\n";
             $i++;
         }
     }
-    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment;filename="distribution-company.xlsx"');
-    header('Cache-Control: max-age=0');
-    header('Cache-Control: max-age=1');
-    header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-    header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-    header('Cache-Control: cache, must-revalidate');
-    header('Pragma: public');
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('distribution-company.xlsx');
+    echo "Finished";
+    // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    // header('Content-Disposition: attachment;filename="distribution-company.xlsx"');
+    // header('Cache-Control: max-age=0');
+    // header('Cache-Control: max-age=1');
+    // header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+    // header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+    // header('Cache-Control: cache, must-revalidate');
+    // header('Pragma: public');
 
-    $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-    $writer->save('php://output');
+    // $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+    // $writer->save('php://output');
     exit;
 }
